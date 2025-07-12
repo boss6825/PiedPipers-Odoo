@@ -49,7 +49,7 @@ root.render(
                 <ThemeWrapper>
                     <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
                         <NotificationProvider>
-                            <App />
+                        <App />
                         </NotificationProvider>
                     </SnackbarProvider>
                 </ThemeWrapper>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, useMediaQuery } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { selectIsAuthenticated } from './features/auth/authSlice';
 
@@ -22,7 +22,6 @@ import ImageUploadTest from './components/editor/ImageUploadTest';
 
 function App() {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const isAuthenticated = useSelector(selectIsAuthenticated);
 
     // Request notification permission when user logs in

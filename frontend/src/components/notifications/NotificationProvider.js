@@ -4,21 +4,47 @@ import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
 import { initSocket, disconnectSocket } from '../../utils/socket';
 import {
-    getNotifications,
-    selectNotifications,
-    selectNotificationsLoading,
-    addNotification
+  getNotifications,
+  addNotification
 } from '../../features/notifications/notificationSlice';
 import { selectUser, selectIsAuthenticated } from '../../features/auth/authSlice';
 
 const NotificationProvider = ({ children }) => {
-    const dispatch = useDispatch();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const user = useSelector(selectUser);
-    const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
-      // Initialize socket connection when user is authenticated
+  // Show browser notification
+  const showNotification = useCallback((notification) => {
+    // Check if browser notifications are supported and permission is granted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('StackIt', {
+        body: notification.message,
+        icon: '/logo192.png',
+      });
+    }
+
+    // Show in-app notification with snackbar
+    const action = (key) => (
+      <Button
+        onClick={() => closeSnackbar(key)}
+        color="inherit"
+        size="small"
+      >
+        Dismiss
+      </Button>
+    );
+
+    enqueueSnackbar(notification.message, {
+      variant: 'info',
+      autoHideDuration: 5000,
+      action,
+    });
+  }, [enqueueSnackbar, closeSnackbar]);
+
+  // Initialize socket connection when user is authenticated
   useEffect(() => {
     if (isAuthenticated && user?.token) {
       // Initialize socket connection
@@ -28,7 +54,7 @@ const NotificationProvider = ({ children }) => {
       socket.on('notification', (notification) => {
         // Show notification
         showNotification(notification);
-        
+
         // Add notification to state
         dispatch(addNotification(notification));
       });
@@ -46,42 +72,14 @@ const NotificationProvider = ({ children }) => {
     }
   }, [isAuthenticated, user, dispatch, showNotification]);
 
-    // Show browser notification
-    const showNotification = useCallback((notification) => {
-        // Check if browser notifications are supported and permission is granted
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('StackIt', {
-                body: notification.message,
-                icon: '/logo192.png',
-            });
-        }
+  // Request notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
-        // Show in-app notification with snackbar
-        const action = (key) => (
-            <Button
-                onClick={() => closeSnackbar(key)}
-                color="inherit"
-                size="small"
-            >
-                Dismiss
-            </Button>
-        );
-
-        enqueueSnackbar(notification.message, {
-            variant: 'info',
-            autoHideDuration: 5000,
-            action,
-        });
-    }, [enqueueSnackbar, closeSnackbar]);
-
-    // Request notification permission on mount
-    useEffect(() => {
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-    }, []);
-
-    return children;
+  return children;
 };
 
 export default NotificationProvider; 

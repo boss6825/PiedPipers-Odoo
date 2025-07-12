@@ -8,8 +8,7 @@ import {
     DialogTitle,
     Typography,
     CircularProgress,
-    IconButton,
-    Badge
+    IconButton
 } from '@mui/material';
 import { PhotoCamera, Close, AddPhotoAlternate } from '@mui/icons-material';
 import { useSelector } from 'react-redux';

@@ -57,8 +57,11 @@ export const disconnectSocket = () => {
     }
 };
 
-export default {
+// Create a named object for default export
+const socketUtils = {
     initSocket,
     getSocket,
     disconnectSocket
-}; 
+};
+
+export default socketUtils; 

@@ -30,9 +30,8 @@ import {
     QuestionAnswer,
     Home,
 } from '@mui/icons-material';
-import { logout, selectIsAuthenticated, selectUser } from '../../features/auth/authSlice';
+import { logout, selectIsAuthenticated } from '../../features/auth/authSlice';
 import {
-    selectUnreadCount,
     selectNotifications,
     selectNotificationsLoading
 } from '../../features/notifications/notificationSlice';
@@ -48,8 +47,8 @@ const Header = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const isAuthenticated = useSelector(selectIsAuthenticated);
-    const user = useSelector(selectUser);
-    const unreadCount = useSelector(selectUnreadCount);
+    const notifications = useSelector(selectNotifications);
+    const notificationsLoading = useSelector(selectNotificationsLoading);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
@@ -254,8 +253,8 @@ const Header = () => {
                 }}
             >
                 <NotificationList
-                    notifications={useSelector(selectNotifications)}
-                    loading={useSelector(selectNotificationsLoading)}
+                    notifications={notifications}
+                    loading={notificationsLoading}
                     onClose={handleMenuClose}
                 />
             </Menu>

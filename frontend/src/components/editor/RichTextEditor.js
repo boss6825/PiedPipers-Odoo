@@ -16,12 +16,10 @@ import {
     FormatListNumbered,
     FormatQuote,
     Code,
-    Link,
     Image as ImageIcon,
     FormatAlignLeft,
     FormatAlignCenter,
     FormatAlignRight,
-    InsertEmoticon,
     FormatStrikethrough,
 } from '@mui/icons-material';
 import ImageUploader from './ImageUploader';
@@ -48,57 +46,68 @@ const RichTextEditor = ({ editor }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    if (!editor) {
-        return null;
-    }
-
     // Pre-define callback functions to avoid recreating them on each render
+    // All hooks must be defined at the top level, before any conditional returns
     const toggleBold = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleBold().run();
     }, [editor]);
 
     const toggleItalic = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleItalic().run();
     }, [editor]);
 
     const toggleStrike = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleStrike().run();
     }, [editor]);
 
     const toggleBulletList = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleBulletList().run();
     }, [editor]);
 
     const toggleOrderedList = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleOrderedList().run();
     }, [editor]);
 
     const toggleBlockquote = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleBlockquote().run();
     }, [editor]);
 
     const toggleCodeBlock = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().toggleCodeBlock().run();
     }, [editor]);
 
     const setAlignLeft = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().setTextAlign('left').run();
     }, [editor]);
 
     const setAlignCenter = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().setTextAlign('center').run();
     }, [editor]);
 
     const setAlignRight = useCallback(() => {
+        if (!editor) return;
         editor.chain().focus().setTextAlign('right').run();
     }, [editor]);
 
     // Handle image upload
     const handleImageUploaded = useCallback((imageUrl) => {
-        if (imageUrl) {
-            editor.chain().focus().setImage({ src: imageUrl }).run();
-        }
+        if (!editor || !imageUrl) return;
+        editor.chain().focus().setImage({ src: imageUrl }).run();
     }, [editor]);
+
+    // Return null if editor is not available
+    if (!editor) {
+        return null;
+    }
 
     return (
         <Paper
