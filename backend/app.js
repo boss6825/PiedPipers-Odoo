@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const path = require('path');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
 
 // Load env vars
@@ -26,6 +27,9 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
@@ -35,6 +39,11 @@ app.use('/api/notifications', notificationRoutes);
 // Basic route
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to StackIt API' });
+});
+
+// Test notification page
+app.get('/test-notifications', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'notification-test.html'));
 });
 
 // Error handling middleware

@@ -14,6 +14,7 @@ import {
     Stack,
     Autocomplete,
     useMediaQuery,
+    Tooltip,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -28,6 +29,7 @@ import { createQuestion } from '../features/questions/questionSlice';
 import { selectIsAuthenticated } from '../features/auth/authSlice';
 import RichTextEditor from '../components/editor/RichTextEditor';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import ImageUploader from '../components/editor/ImageUploader';
 
 // Form validation schema
 const schema = yup.object().shape({
@@ -180,9 +182,26 @@ const AskQuestionPage = () => {
                     </Box>
 
                     <Box>
-                        <Typography variant="subtitle1" fontWeight={600} mb={1}>
-                            Description
-                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <Typography variant="subtitle1" fontWeight={600}>
+                                Description
+                            </Typography>
+                            <Tooltip title="Upload an image to include in your question">
+                                <Box>
+                                    <ImageUploader
+                                        onImageUploaded={(imageUrl) => {
+                                            if (editor && imageUrl) {
+                                                editor.chain().focus().setImage({ src: imageUrl }).run();
+                                            }
+                                        }}
+                                        buttonText="Upload Image"
+                                        variant="contained"
+                                        color="primary"
+                                        size="medium"
+                                    />
+                                </Box>
+                            </Tooltip>
+                        </Box>
                         <RichTextEditor editor={editor} />
                         {!content && (
                             <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>

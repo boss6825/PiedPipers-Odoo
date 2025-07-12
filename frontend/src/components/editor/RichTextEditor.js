@@ -17,13 +17,14 @@ import {
     FormatQuote,
     Code,
     Link,
-    Image,
+    Image as ImageIcon,
     FormatAlignLeft,
     FormatAlignCenter,
     FormatAlignRight,
     InsertEmoticon,
     FormatStrikethrough,
 } from '@mui/icons-material';
+import ImageUploader from './ImageUploader';
 
 // Memoized button component to prevent unnecessary re-renders
 const MenuButton = memo(({ onClick, isActive = null, disabled = false, title, children }) => (
@@ -90,6 +91,13 @@ const RichTextEditor = ({ editor }) => {
 
     const setAlignRight = useCallback(() => {
         editor.chain().focus().setTextAlign('right').run();
+    }, [editor]);
+
+    // Handle image upload
+    const handleImageUploaded = useCallback((imageUrl) => {
+        if (imageUrl) {
+            editor.chain().focus().setImage({ src: imageUrl }).run();
+        }
     }, [editor]);
 
     return (
@@ -169,6 +177,13 @@ const RichTextEditor = ({ editor }) => {
                 >
                     <Code fontSize="small" />
                 </MenuButton>
+
+                <Divider orientation="vertical" flexItem />
+
+                <ImageUploader
+                    onImageUploaded={handleImageUploaded}
+                    buttonText={<ImageIcon fontSize="small" />}
+                />
 
                 {!isMobile && (
                     <>

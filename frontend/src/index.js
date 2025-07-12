@@ -9,6 +9,7 @@ import App from './App';
 import { store } from './app/store';
 import { getThemeSettings } from './styles/theme';
 import { getThemeMode } from './utils/helpers';
+import NotificationProvider from './components/notifications/NotificationProvider';
 
 // Create a ThemeWrapper component to handle theme changes
 const ThemeWrapper = ({ children }) => {
@@ -47,7 +48,9 @@ root.render(
             <BrowserRouter>
                 <ThemeWrapper>
                     <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-                        <App />
+                        <NotificationProvider>
+                            <App />
+                        </NotificationProvider>
                     </SnackbarProvider>
                 </ThemeWrapper>
             </BrowserRouter>

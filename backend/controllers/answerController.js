@@ -2,6 +2,8 @@ const Answer = require('../models/Answer');
 const Question = require('../models/Question');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const { processMentions } = require('../services/mentionService');
+const { createAnswerNotification, createAcceptNotification } = require('../services/notificationService');
 
 // @desc    Create a new answer
 // @route   POST /api/questions/:questionId/answers
@@ -25,17 +27,25 @@ const createAnswer = async (req, res) => {
             question: questionId,
         });
 
-        // Create notification for question owner if it's not the same user
-        if (question.user.toString() !== req.user._id.toString()) {
-            await Notification.create({
-                recipient: question.user,
-                sender: req.user._id,
-                type: 'answer',
-                question: questionId,
-                answer: answer._id,
-                message: `${req.user.username} answered your question: "${question.title.substring(0, 30)}${question.title.length > 30 ? '...' : ''}"`,
-            });
-        }
+        // Process mentions in the answer content
+        await processMentions(
+            content,
+            req.user._id,
+            req.user.username,
+            questionId,
+            answer._id,
+            'answer'
+        );
+
+        // Create notification for question owner
+        await createAnswerNotification(
+            question.user,
+            req.user._id,
+            req.user.username,
+            questionId,
+            answer._id,
+            question.title
+        );
 
         // Populate user information
         const populatedAnswer = await Answer.findById(answer._id).populate('user', 'username avatar');
@@ -93,9 +103,24 @@ const updateAnswer = async (req, res) => {
             throw new Error('Not authorized to update this answer');
         }
 
+        // Store old content to check for new mentions
+        const oldContent = answer.content;
+
         answer.content = content || answer.content;
 
         const updatedAnswer = await answer.save();
+
+        // If content was updated, process new mentions
+        if (content && content !== oldContent) {
+            await processMentions(
+                content,
+                req.user._id,
+                req.user.username,
+                answer.question,
+                answerId,
+                'answer'
+            );
+        }
 
         // Populate user information
         const populatedAnswer = await Answer.findById(updatedAnswer._id).populate('user', 'username avatar');
@@ -282,17 +307,15 @@ const acceptAnswer = async (req, res) => {
             await answerOwner.save();
         }
 
-        // Create notification for answer owner if it's not the same user
-        if (answer.user.toString() !== req.user._id.toString()) {
-            await Notification.create({
-                recipient: answer.user,
-                sender: req.user._id,
-                type: 'accept',
-                question: question._id,
-                answer: answer._id,
-                message: `${req.user.username} accepted your answer on: "${question.title.substring(0, 30)}${question.title.length > 30 ? '...' : ''}"`,
-            });
-        }
+        // Create notification for answer owner
+        await createAcceptNotification(
+            answer.user,
+            req.user._id,
+            req.user.username,
+            question._id,
+            answer._id,
+            question.title
+        );
 
         // Populate user information including upvotes and downvotes
         const populatedAnswer = await Answer.findById(answerId)

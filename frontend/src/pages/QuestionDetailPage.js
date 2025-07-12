@@ -15,6 +15,7 @@ import {
     useMediaQuery,
     Breadcrumbs,
     Link,
+    Tooltip,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -43,6 +44,7 @@ import {
 import { selectIsAuthenticated, selectUser } from '../features/auth/authSlice';
 import RichTextEditor from '../components/editor/RichTextEditor';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import ImageUploader from '../components/editor/ImageUploader';
 
 // Initialize dayjs plugins
 dayjs.extend(relativeTime);
@@ -287,9 +289,26 @@ const QuestionDetailPage = () => {
             </Box>
 
             <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" gutterBottom fontWeight={600}>
-                    Submit Your Answer
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight={600}>
+                        Submit Your Answer
+                    </Typography>
+                    <Tooltip title="Upload an image to include in your answer">
+                        <Box>
+                            <ImageUploader
+                                onImageUploaded={(imageUrl) => {
+                                    if (editor && imageUrl) {
+                                        editor.chain().focus().setImage({ src: imageUrl }).run();
+                                    }
+                                }}
+                                buttonText="Upload Image"
+                                variant="contained"
+                                color="primary"
+                                size="medium"
+                            />
+                        </Box>
+                    </Tooltip>
+                </Box>
 
                 <Paper
                     sx={{

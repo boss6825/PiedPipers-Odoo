@@ -1,5 +1,7 @@
 const app = require('./app');
 const connectDB = require('./config/db');
+const http = require('http');
+const { initSocket } = require('./utils/socket');
 
 // Connect to database
 connectDB();
@@ -7,8 +9,14 @@ connectDB();
 // Define port
 const PORT = process.env.PORT || 5000;
 
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.io
+initSocket(server);
+
 // Start server
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 

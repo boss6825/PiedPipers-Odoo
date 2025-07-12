@@ -86,6 +86,10 @@ export const notificationSlice = createSlice({
             state.notifications = [];
             state.unreadCount = 0;
         },
+        addNotification: (state, action) => {
+            state.notifications.unshift(action.payload);
+            state.unreadCount += 1;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -126,7 +130,7 @@ export const notificationSlice = createSlice({
     },
 });
 
-export const { reset, clearNotifications } = notificationSlice.actions;
+export const { reset, clearNotifications, addNotification } = notificationSlice.actions;
 export const selectNotifications = (state) => state.notifications.notifications;
 export const selectUnreadCount = (state) => state.notifications.unreadCount;
 export const selectNotificationsLoading = (state) => state.notifications.isLoading;

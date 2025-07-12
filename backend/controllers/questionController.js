@@ -1,7 +1,8 @@
 const Question = require('../models/Question');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
-const {s3Uploadv3} = require('../services/s3Services');
+const { processMentions } = require('../services/mentionService');
+const { s3Uploadv3 } = require('../services/s3Services');
 // @desc    Create a new question
 // @route   POST /api/questions
 // @access  Private
@@ -16,6 +17,16 @@ const createQuestion = async (req, res) => {
             tags,
             user: req.user._id,
         });
+
+        // Process mentions in the question description
+        await processMentions(
+            description,
+            req.user._id,
+            req.user.username,
+            question._id,
+            null,
+            'question'
+        );
 
         res.status(201).json(question);
     } catch (error) {
@@ -120,11 +131,27 @@ const updateQuestion = async (req, res) => {
                 throw new Error('Not authorized to update this question');
             }
 
+            // Store old description to check for new mentions
+            const oldDescription = question.description;
+
             question.title = title || question.title;
             question.description = description || question.description;
             question.tags = tags || question.tags;
 
             const updatedQuestion = await question.save();
+
+            // If description was updated, process new mentions
+            if (description && description !== oldDescription) {
+                await processMentions(
+                    description,
+                    req.user._id,
+                    req.user.username,
+                    question._id,
+                    null,
+                    'question'
+                );
+            }
+
             res.json(updatedQuestion);
         } else {
             res.status(404);
@@ -247,15 +274,15 @@ const voteQuestion = async (req, res) => {
     }
 };
 
-const addImage = async(req, res) =>{
+const addImage = async (req, res) => {
     console.log("adding")
     if (!req.file) {
         console.log("Error 1");
         return res.status(400).json({ error: "Image file is required" });
     }
-    try{
-         console.log("adding2")
-         const imgData = await s3Uploadv3(req.file);
+    try {
+        console.log("adding2")
+        const imgData = await s3Uploadv3(req.file);
         console.log("adding3")
         // If the structure has a 'Location' key, it should be accessed here
         const imgLink = imgData.Location || imgData.result?.Location;
@@ -263,9 +290,9 @@ const addImage = async(req, res) =>{
         if (!imgLink) {
             return res.status(500).json({ error: "Failed to retrieve image link from S3" });
         }
-        res.json({link: imgLink});
+        res.json({ link: imgLink });
 
-    }catch(e){
+    } catch (e) {
         console.error("Error uploading :", error);
         res.status(500).json({ error: "Failed to upload " });
     }

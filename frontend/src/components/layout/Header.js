@@ -10,7 +10,6 @@ import {
     IconButton,
     Menu,
     MenuItem,
-    Badge,
     useMediaQuery,
     InputBase,
     alpha,
@@ -19,19 +18,28 @@ import {
     ListItem,
     ListItemText,
     Divider,
+    ListItemIcon,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
     Search as SearchIcon,
     Menu as MenuIcon,
-    Notifications as NotificationsIcon,
     AccountCircle,
     Close as CloseIcon,
+    ImageOutlined,
+    QuestionAnswer,
+    Home,
 } from '@mui/icons-material';
 import { logout, selectIsAuthenticated, selectUser } from '../../features/auth/authSlice';
-import { selectUnreadCount } from '../../features/notifications/notificationSlice';
+import {
+    selectUnreadCount,
+    selectNotifications,
+    selectNotificationsLoading
+} from '../../features/notifications/notificationSlice';
 import { setFilters } from '../../features/questions/questionSlice';
 import ThemeToggle from '../common/ThemeToggle';
+import NotificationList from '../notifications/NotificationList';
+import NotificationBadge from '../notifications/NotificationBadge';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -150,6 +158,16 @@ const Header = () => {
                                 />
                             </Box>
 
+                            <Button
+                                color="inherit"
+                                component={RouterLink}
+                                to="/guide/image-upload"
+                                startIcon={<ImageOutlined />}
+                                sx={{ mr: 2 }}
+                            >
+                                Image Guide
+                            </Button>
+
                             <Box sx={{ flexGrow: 1 }} />
                         </>
                     )}
@@ -159,11 +177,7 @@ const Header = () => {
 
                         {isAuthenticated ? (
                             <>
-                                <IconButton color="inherit" onClick={handleNotificationMenuOpen}>
-                                    <Badge badgeContent={unreadCount} color="error">
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
+                                <NotificationBadge onClick={handleNotificationMenuOpen} />
 
                                 <IconButton
                                     edge="end"
@@ -234,22 +248,16 @@ const Header = () => {
                 onClose={handleMenuClose}
                 PaperProps={{
                     style: {
-                        maxHeight: '300px',
+                        maxHeight: '400px',
                         width: '350px',
                     },
                 }}
             >
-                <MenuItem>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                        Notifications
-                    </Typography>
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={handleMenuClose}>
-                    <Typography variant="body2">
-                        You have no notifications
-                    </Typography>
-                </MenuItem>
+                <NotificationList
+                    notifications={useSelector(selectNotifications)}
+                    loading={useSelector(selectNotificationsLoading)}
+                    onClose={handleMenuClose}
+                />
             </Menu>
 
             {/* Mobile Drawer */}
@@ -273,10 +281,22 @@ const Header = () => {
                     <Divider />
                     <List>
                         <ListItem button component={RouterLink} to="/" onClick={handleToggleMobileMenu}>
+                            <ListItemIcon>
+                                <Home />
+                            </ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
                         <ListItem button component={RouterLink} to="/questions/ask" onClick={handleToggleMobileMenu}>
+                            <ListItemIcon>
+                                <QuestionAnswer />
+                            </ListItemIcon>
                             <ListItemText primary="Ask Question" />
+                        </ListItem>
+                        <ListItem button component={RouterLink} to="/guide/image-upload" onClick={handleToggleMobileMenu}>
+                            <ListItemIcon>
+                                <ImageOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary="Image Upload Guide" />
                         </ListItem>
                     </List>
                     <Divider />
