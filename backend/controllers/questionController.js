@@ -1,7 +1,7 @@
 const Question = require('../models/Question');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
-
+const {s3Uploadv3} = require('../services/s3Services');
 // @desc    Create a new question
 // @route   POST /api/questions
 // @access  Private
@@ -247,6 +247,29 @@ const voteQuestion = async (req, res) => {
     }
 };
 
+const addImage = async(req, res) =>{
+    console.log("adding")
+    if (!req.file) {
+        console.log("Error 1");
+        return res.status(400).json({ error: "Image file is required" });
+    }
+    try{
+         console.log("adding2")
+         const imgData = await s3Uploadv3(req.file);
+        console.log("adding3")
+        // If the structure has a 'Location' key, it should be accessed here
+        const imgLink = imgData.Location || imgData.result?.Location;
+
+        if (!imgLink) {
+            return res.status(500).json({ error: "Failed to retrieve image link from S3" });
+        }
+        res.json({link: imgLink});
+
+    }catch(e){
+        console.error("Error uploading :", error);
+        res.status(500).json({ error: "Failed to upload " });
+    }
+};
 module.exports = {
     createQuestion,
     getQuestions,
@@ -254,4 +277,5 @@ module.exports = {
     updateQuestion,
     deleteQuestion,
     voteQuestion,
+    addImage
 }; 
