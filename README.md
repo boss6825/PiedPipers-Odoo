@@ -1,5 +1,8 @@
-<<<<<<< HEAD
-# StackIt - Q&A Forum Platform
+
+# StackIt – A Minimal Q&A Forum Platform
+
+> Team 3154  
+> Team Leader Email: 23it3009@rgipt.ac.in
 
 StackIt is a minimal question-and-answer platform that supports collaborative learning and structured knowledge sharing. It's designed to be simple, user-friendly, and focused on the core experience of asking and answering questions within a community.
 
@@ -23,6 +26,7 @@ StackIt is a minimal question-and-answer platform that supports collaborative le
 ## Project Structure
 
 ```
+
 ├── backend/
 │   ├── config/             # DB connection, environment variables
 │   ├── controllers/        # Route handler logic
@@ -37,7 +41,8 @@ StackIt is a minimal question-and-answer platform that supports collaborative le
 ├── frontend/               # React frontend (to be added)
 │
 └── README.md
-```
+
+````
 
 ## Getting Started
 
@@ -50,19 +55,19 @@ StackIt is a minimal question-and-answer platform that supports collaborative le
 
 1. Navigate to the backend directory:
 
-   ```
+   ```bash
    cd backend
-   ```
+````
 
 2. Install dependencies:
 
-   ```
+   ```bash
    npm install
    ```
 
 3. Create a `.env` file in the backend directory with the following variables:
 
-   ```
+   ```env
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/stackit
    JWT_SECRET=your_jwt_secret
@@ -70,7 +75,8 @@ StackIt is a minimal question-and-answer platform that supports collaborative le
    ```
 
 4. Start the server:
-   ```
+
+   ```bash
    npm run dev
    ```
 
@@ -78,35 +84,35 @@ StackIt is a minimal question-and-answer platform that supports collaborative le
 
 ### Authentication
 
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
+* `POST /api/auth/register` - Register a new user
+* `POST /api/auth/login` - Login user
+* `GET /api/auth/profile` - Get user profile
+* `PUT /api/auth/profile` - Update user profile
 
 ### Questions
 
-- `POST /api/questions` - Create a new question
-- `GET /api/questions` - Get all questions
-- `GET /api/questions/:id` - Get question by ID
-- `PUT /api/questions/:id` - Update a question
-- `DELETE /api/questions/:id` - Delete a question
-- `PUT /api/questions/:id/vote` - Vote on a question
+* `POST /api/questions` - Create a new question
+* `GET /api/questions` - Get all questions
+* `GET /api/questions/:id` - Get question by ID
+* `PUT /api/questions/:id` - Update a question
+* `DELETE /api/questions/:id` - Delete a question
+* `PUT /api/questions/:id/vote` - Vote on a question
 
 ### Answers
 
-- `POST /api/questions/:questionId/answers` - Create a new answer
-- `GET /api/questions/:questionId/answers` - Get all answers for a question
-- `PUT /api/answers/:id` - Update an answer
-- `DELETE /api/answers/:id` - Delete an answer
-- `PUT /api/answers/:id/vote` - Vote on an answer
-- `PUT /api/answers/:id/accept` - Accept an answer
+* `POST /api/questions/:questionId/answers` - Create a new answer
+* `GET /api/questions/:questionId/answers` - Get all answers for a question
+* `PUT /api/answers/:id` - Update an answer
+* `DELETE /api/answers/:id` - Delete an answer
+* `PUT /api/answers/:id/vote` - Vote on an answer
+* `PUT /api/answers/:id/accept` - Accept an answer
 
 ### Notifications
 
-- `GET /api/notifications` - Get all notifications for a user
-- `PUT /api/notifications/:id` - Mark notification as read
-- `PUT /api/notifications` - Mark all notifications as read
-- `GET /api/notifications/count` - Get unread notification count
+* `GET /api/notifications` - Get all notifications for a user
+* `PUT /api/notifications/:id` - Mark notification as read
+* `PUT /api/notifications` - Mark all notifications as read
+* `GET /api/notifications/count` - Get unread notification count
 
 ## License
 
@@ -114,12 +120,15 @@ This project is licensed under the MIT License.
 
 ## Acknowledgements
 
-- [Express](https://expressjs.com/)
-- [MongoDB](https://www.mongodb.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [React](https://reactjs.org/)
-=======
-# Team 3154 
-# StackIt – A Minimal Q&A Forum Platform
-# Team Leader Email: 23it3009@rgipt.ac.in
->>>>>>> 47e9bb962d63dd3df511544cc07cb45184643664
+* [Express](https://expressjs.com/)
+* [MongoDB](https://www.mongodb.com/)
+* [Mongoose](https://mongoosejs.com/)
+* [React](https://reactjs.org/)
+
+```
+
+---
+
+Just copy and paste the above into your `README.md`, save it, and you're good to go.  
+If you want this zipped as a file or added to a repo automatically, I can help with that too.
+```
