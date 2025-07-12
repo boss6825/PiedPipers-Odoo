@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # StackIt - Q&A Forum Platform
 
 StackIt is a minimal question-and-answer platform that supports collaborative learning and structured knowledge sharing. It's designed to be simple, user-friendly, and focused on the core experience of asking and answering questions within a community.
@@ -117,3 +118,8 @@ This project is licensed under the MIT License.
 - [MongoDB](https://www.mongodb.com/)
 - [Mongoose](https://mongoosejs.com/)
 - [React](https://reactjs.org/)
+=======
+# Team 3154 
+# StackIt – A Minimal Q&A Forum Platform
+# Team Leader Email: 23it3009@rgipt.ac.in
+>>>>>>> 47e9bb962d63dd3df511544cc07cb45184643664
